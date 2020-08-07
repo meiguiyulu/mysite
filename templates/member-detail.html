@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    家庭记账管理系统|家庭成员
+{% endblock %}
+
+{% block welcome %}
+    <div class="navbar-text">
+        <a href="#" class="active">{{ user.username }}</a>, 你好
+    </div>
+{% endblock %}
+
+{% block otherbutton %}
+    <div id="navbar-collapse" class="collapse navbar-collapse">{# 下拉列表 #}
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="{% url 'memberlist' user.pk %}">
+                    <span class="btn btn-info">
+                        返回
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-md-offset-3">
+                <div class="register-content">
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">成员详情</div>
+                        <div class="panel-body">
+                            <ul class="li-description">
+
+                                <form action="{% url 'updatemember' member_detail.pk %}" method="post">
+                                    {% csrf_token %}
+                                    <span hidden>{{ member_detail.pk }}</span>{# 主键隐藏 #}
+                                    <div class="addexpend-required">
+                                        姓名:
+                                    </div>
+                                    <span>
+                                        <input type="text" name="member_name"
+                                               value="{{ member_detail.member_name }}">
+                                    </span>
+                                    <hr>
+
+                                    <div class="addexpend-required">
+                                        关系：
+                                    </div>
+                                    <select id="member_relation" name="member_relation">
+                                        <option value="{{ member_detail.member_relation }}">
+                                            {{ member_detail.member_relation }}
+                                        </option>
+                                        <option value="" disabled>-------</option>
+
+                                        {% ifequal member_detail.member_relation '自己' %}
+                                        {% else %}
+                                            <option value="自己">自己</option>
+                                        {% endifequal %}
+
+                                        {% ifequal member_detail.member_relation '夫妻' %}
+                                        {% else %}
+                                            <option value="夫妻">夫妻</option>
+                                        {% endifequal %}
+
+                                        {% ifequal member_detail.member_relation '父子' %}
+                                        {% else %}
+                                            <option value="父子">父子</option>
+                                        {% endifequal %}
+
+                                        {% ifequal member_detail.member_relation '父女' %}
+                                        {% else %}
+                                            <option value="父女">父女</option>
+                                        {% endifequal %}
+
+                                        {% ifequal member_detail.member_relation '母子' %}
+                                        {% else %}
+                                            <option value="母子">母子</option>
+                                        {% endifequal %}
+
+                                        {% ifequal member_detail.member_relation '母女' %}
+                                        {% else %}
+                                            <option value="母女">母女</option>
+                                        {% endifequal %}
+
+                                        {% ifequal member_detail.member_relation '兄弟姐妹' %}
+                                        {% else %}
+                                            <option value="兄弟姐妹">兄弟姐妹</option>
+                                        {% endifequal %}
+
+                                        {% ifequal member_detail.member_relation '其他' %}
+                                        {% else %}
+                                            <option value="其他">其他</option>
+                                        {% endifequal %}
+                                    </select>
+                                    <hr>
+
+                                    <div class="addexpend-required">
+                                        描述:
+                                    </div>
+                                    <span>
+                                        <textarea id="member_description" name="member_description" cols="30" rows="3">{{ member_detail.description }}</textarea>
+                                    </span>
+
+                                    <nav aria-label="...">
+                                        <ul class="pager">
+                                            <li>
+                                                <div class="btn btn-danger">
+                                                    <a href="{% url 'deletemember' member_detail.pk %}">删除</a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <input type="submit" value="保存" class="btn btn-primary">
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </form>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

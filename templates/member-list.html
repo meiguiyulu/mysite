@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    家庭记账管理系统|家庭成员
+{% endblock %}
+
+{% block welcome %}
+    <div class="navbar-text">
+        <a href="#" class="active">{{ user.username }}</a>, 你好
+    </div>
+{% endblock %}
+
+{% block otherbutton %}
+    <div id="navbar-collapse" class="collapse navbar-collapse">{# 下拉列表 #}
+        <form action="{% url 'searchmember' user.pk %}?from={{ request.get_full_path }}"
+              method="post">
+          {% csrf_token %}
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <input type="text" placeholder="姓名" name="member_name">
+                </li>
+                <li>
+                    <input type="submit" value="搜索">
+                </li>
+            </ul>
+        </form>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-md-offset-3">
+                <div class="register-content">
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">成员</div>
+                        <div class="panel-body">
+                            <ul class="li-description">
+                                {% for foo in user_members %}
+                                    {% csrf_token %}
+                                    <span hidden>{{ foo.pk }}</span>{# 主键 #}
+                                    <span class="glyphicon glyphicon-user" aria-hidden="true">
+                                        姓名:
+                                    </span>
+                                    <span class="member_list">
+                                        <a href="{% url 'memberdetail' foo.pk %}">
+                                            {{ foo.member_name }}
+                                        </a>
+                                    </span>
+
+                                    <span class="glyphicon glyphicon-tag" aria-hidden="true">
+                                        关系:
+                                    </span>
+                                    <span class="member_list">
+                                        {{ foo.member_relation }}
+                                    </span>
+
+                                    <span class="glyphicon glyphicon-cloud" aria-hidden="true">
+                                        描述:
+                                    </span>
+                                    <span class="member_list">
+                                    {{ foo.description|striptags|truncatechars:8 }}
+                                    </span>
+                                    <hr>
+                                {% empty %}
+                                    <div>
+                                        暂无成员
+                                    </div>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <nav aria-label="...">
+                            <ul class="pager">
+                                <li>
+                                    <a href="{% url 'updateinformation' user.pk %}">返回</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'addmember' user.pk %}">添加</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

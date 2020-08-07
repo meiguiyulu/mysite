@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    家庭记账管理系统|成功
+{% endblock %}
+
+{% block otherbutton %}
+
+{% endblock %}
+
+{% block content %}
+
+    <div style="margin-top: 3em;">
+      <div class="alert alert-success" role="alert">
+          {{ message }}, <a href="{% url 'incomelist' user.pk %}">返回</a>{# redirect_to #}
+      </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    家庭记账管理系统|错误
+{% endblock %}
+
+{% block otherbutton %}
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="alert alert-danger" role="alert" style="margin-top: 3em;">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      {{ message }}, <a href="{{ redirect_to }}">返回</a>{# redirect_to #}
+    </div>
+
+{% endblock %}

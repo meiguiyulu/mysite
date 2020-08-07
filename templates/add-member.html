@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    家庭记账管理系统|添加成员
+{% endblock %}
+
+{% block welcome %}
+    <div class="navbar-text">
+        <a href="#" class="active">{{ user.username }}</a>, 你好
+    </div>
+{% endblock %}
+
+{% block otherbutton %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-md-8 col-md-offset-2">
+                <div class="register-content">
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">添加成员</div>
+                        <div class="panel-body">
+                            <form action="{% url 'savemember' user.pk %}?from={{ request.get_full_path }}" method="post">
+                                {% csrf_token %}
+                                <div class="addexpend-required">
+                                    名字:
+                                </div>
+                                <input type="text" name="member_name">
+                                <hr>
+                                <div class="addexpend-required">
+                                    关系:
+                                </div>
+                                <select name="member_relation" id="member_relation">
+                                    <option value="自己">自己</option>
+                                    <option value="夫妻">夫妻</option>
+                                    <option value="父子">父子</option>
+                                    <option value="父女">父女</option>
+                                    <option value="母子">母子</option>
+                                    <option value="母女">母女</option>
+                                    <option value="兄弟姐妹">兄弟姐妹</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                                <hr>
+
+                                <div class="addexpend-required">
+                                    说明:
+                                </div>
+                                <textarea name="member_description" id="member_description"
+                                          cols="30" rows="10"></textarea>
+
+                                <nav aria-label="...">
+                                    <ul class="pager">
+                                        <li>
+                                            <div class="btn btn-info">
+                                                <a href="{% url 'memberlist' user.pk %}">返回</a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <input type="submit" value="保存" class="btn btn-primary">
+                                        </li>
+                                    </ul>
+                                </nav>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

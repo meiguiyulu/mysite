@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>添加支出</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+
+    <!-- 导航条 -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="#" class="navbar-brand">首页</a>
+                <p class="navbar-text">{{ user.username }}, 你好</p>
+                <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="add-expend">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-md-8 col-md-offset-2">
+                    <div class="panel panel-default">
+                      <!-- Default panel contents -->
+                        <div class="panel-heading">添加支出</div>
+                        <div class="panel-body">
+                            <form action="{% url 'addcontent' user.pk %}?from={{ request.get_full_path }}" method="post">
+                                {% csrf_token %}
+                                <div class="addexpend-required">
+                                    日期:
+                                </div>
+                                <input type="datetime-local" name="new_add_time">
+                                <hr>
+                                <div class="addexpend-required">
+                                    账户:
+                                </div>
+                                <select name="account" id="account">
+                                    <option value="现金">现金</option>
+                                    <option value="支付宝">支付宝</option>
+                                    <option value="银行卡">银行卡</option>
+                                </select>
+                                <hr>
+                                <div class="addexpend-required">
+                                    支出类型:
+                                </div>
+                                <select name="outcometype" id="outcometype">
+                                    <option value="食品酒水">食品酒水</option>
+                                    <option value="服饰">服饰</option>
+                                    <option value="居家物业">居家物业</option>
+                                    <option value="行车交通">行车交通</option>
+                                    <option value="交流通讯">交流通讯</option>
+                                    <option value="休闲娱乐">休闲娱乐</option>
+                                    <option value="文化教育">文化教育</option>
+                                    <option value="人情往来">人情往来</option>
+                                    <option value="医疗医药">医疗医药</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                                <hr>
+                                <div class="addexpend-required">
+                                    人:
+                                </div>
+                                <select name="people" id="people">
+                                    {% for user_member in user_members %}
+                                        <option value="{{ user_member.member_name }}">
+                                            {{ user_member.member_name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <hr>
+                                <div class="addexpend-required">
+                                    金额:
+                                </div>
+                                <input type="text" name="money" placeholder="0.0"
+                                       oninput = "value=value.replace(/[^\d]/g,'')"><!--限制只输入数字-->
+                                <hr>
+                                <div class="addexpend-required">
+                                    描述 :
+                                </div>
+                                <textarea name="description" id="description" cols="30" rows="3"></textarea>
+                                <nav aria-label="...">
+                                    <ul class="pager">
+                                       <li><a href="{% url 'expendlist' user.pk%}">返回</a></li>
+                                       <li><input type="submit" value="添加" class="btn btn-primary"></li>
+                                    </ul>
+                                </nav>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        <canvas class="background"></canvas>
+
+<script>
+        window.onload = function () {
+            Particles.init({
+                selector: '.background',
+                color: ['#DA0463', '#404B69', '#DBEDF3'],
+                connectParticles: true
+            });
+        };
+    </script>
+
+    <script type="text/javascript" src="{% static 'jquery-1.12.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'particles.min.js' %}"></script>
+</body>
+</html>

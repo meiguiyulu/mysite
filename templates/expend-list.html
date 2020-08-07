@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>个人中心</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <!-- 导航条 -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="{% url 'index' %}" class="navbar-brand">首页</a>
+                <div class="navbar-text">
+                    <a href="{% url 'updateinformation' contents_user.pk %}" class="active">
+                        {{ contents_user.username }}
+                    </a>
+                    ，你好
+                </div>
+                <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbar-collapse" class="collapse navbar-collapse">{# 下拉列表 #}
+                <form action="{% url 'memberexpendlist' contents_user.pk %}?from={{ request.get_full_path }}"
+                      method="post">
+                      {% csrf_token %}
+                    <ul class="nav navbar-nav navbar-right">
+
+                            <li>
+                                <input type="text" placeholder="姓名" name="member_name">
+                            </li>
+                            <li>
+                                <input type="submit" value="搜索">
+                            </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 5em;">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-md-8 col-md-offset-2">
+                    <div class="panel panel-default">
+                      <!-- Default panel contents -->
+                        <div class="panel-heading">支出</div>
+                        <div class="panel-body">
+                            <ul class="li-description">
+                                {% for content in contents_expend %}
+                                    {% csrf_token %}
+                                    <span hidden>{{ content.pk }}</span><!--隐藏-->
+                                    <span class="glyphicon glyphicon-time" aria-hidden="true">
+                                        时间: <a href="{% url 'exxpenddetail' content.pk%}?from={{ request.get_full_path }}">
+                                        {{ content.date|date:"Y-m-d" }}
+                                    </a>
+                                    </span>
+                                    <span class="glyphicon glyphicon-yen" aria-hidden="true">
+                                        支出: {{ content.outcome }}
+                                    </span>
+                                    <span class="glyphicon glyphicon-user" aria-hidden="true">
+                                        人:   {{ content.people }}
+                                    </span>
+                                    <span class="glyphicon glyphicon-jpy" aria-hidden="true">
+                                        金额: {{ content.money }}
+                                    </span>
+                                    <span class="glyphicon glyphicon-cloud" aria-hidden="true">
+                                        描述: {{ content.description|striptags|truncatechars:8 }}
+                                    </span>
+                                    <hr>
+                                {% empty %}
+                                    无支出
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <!-- 分页 -->
+                        <nav aria-label="Page navigation" class="paginator-expend">
+                            <ul class="pagination">
+                                <!--上一页-->
+                                <li>
+                                    {% if page_of_expends.has_previous %}{# 不是第一页 #}
+                                        <a href="?page={{ page_of_expends.previous_page_number }}"
+                                           aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    {% else %}
+                                        <span aria-hidden="true">&laquo;</span>
+                                    {% endif %}
+                                </li>
+                                {# 全部页面 #}
+                                {% for page_num in page_range %}
+                                    {% if page_num == page_of_expends.number %}
+                                        <li class="active">
+                                            <span>
+                                                {{ page_num }}
+                                            </span>
+                                        </li>
+                                    {% else %}
+                                        {% if page_num == '...' %}
+                                            <li><span>{{ page_num }}</span></li>
+                                        {% else %}
+                                            <li>
+                                                <a href="?page={{ page_num }}">
+                                                    {{ page_num }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                {# 下一页 #}
+                                <li>
+                                    {% if page_of_expends.has_next %}
+                                        <a href="?page={{ page_of_expends.next_page_number }}"
+                                           aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    {% else %}
+                                        <span aria-hidden="true">&raquo;</span>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </nav>
+
+                        <nav aria-label="...">
+                            <ul class="pager">
+                              <li>
+                                  <a href="{% url 'personalcenteragain' contents_user.pk contents_user.pk%}">
+                                    返回
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="{% url 'addexpend' contents_user.pk%}">
+                                    添加
+                                  </a>
+                              </li>
+                            </ul>
+                        </nav>
+                       </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <canvas class="background"></canvas>
+
+<script>
+        window.onload = function () {
+            Particles.init({
+                selector: '.background',
+                color: ['#DA0463', '#404B69', '#DBEDF3'],
+                connectParticles: true
+            });
+        };
+    </script>
+
+    <script type="text/javascript" src="{% static 'jquery-1.12.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'particles.min.js' %}"></script>
+</body>
+</html>

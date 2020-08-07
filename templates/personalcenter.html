@@ -1,0 +1,220 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>个人中心</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script type="text/javascript" src="{% static 'highcharts.js' %}"></script>
+</head>
+<body>
+
+    <!-- 导航条 -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="{% url 'index' %}" class="navbar-brand">首页</a>
+                <div class="navbar-text">
+                    <a href="{% url 'updateinformation' contents_user.pk %}" class="active">
+                        {{ contents_user.username }}
+                    </a>
+                    ，你好
+                </div>
+                <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbar-collapse" class="collapse navbar-collapse">{# 下拉列表 #}
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="{% url 'logout' %}">
+                            <span class="btn btn-danger">
+                                注销
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 5em;">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4 col-md-4">
+                    <div class="panel panel-default">
+                      <!-- Default panel contents -->
+                      <div class="panel-heading">支出,本周总支出为{{ sum_of_expend_this_weekend }}</div>
+                        <div class="panel-body">
+                            <div id="expend-container"></div>
+                            {% csrf_token %}
+                            <script>
+                            // 图表配置
+                            var options = {
+                                chart: {type: 'line' },                         //指定图表的类型，默认是折线图（line）
+                                title: {text: null  },                 // 标题
+                                xAxis: {
+                                    categories: {{ dates|safe }},
+                                    tickmarkPlacement: 'on',
+                                    title: { text: '近七日支出' },
+                                },  // x 轴分类
+                                yAxis: {
+                                    title: {text: null },               // y 轴标题
+                                    labels: {enabled: false},
+                                    gridLineDashStyle: 'Dash',
+                                },
+                                series: [{                              // 数据列
+                                    name: '支出',                        // 数据列名
+                                    data: {{ expends_sum }}                     // 数据
+                                }],
+                                plotOptions:{ {# 数据标签 #}
+                                    line: {
+                                        dataLabels: {
+                                            enabled: true,
+                                        }
+                                    }
+                                },
+                                legend: {enabled: false},
+                                credits: {enabled: false},
+                            };
+                            // 图表初始化函数
+                            var chart = Highcharts.chart('expend-container', options);
+                        </script>
+                        </div>
+
+                        <nav aria-label="...">
+                            <ul class="pager">
+                              <li><a href="{% url 'expendlist' contents_user.pk%}">查看</a></li>
+                              <li>
+                                  <a href="{% url 'addexpend' contents_user.pk%}">
+                                    添加
+                                  </a>
+                              </li>
+                            </ul>
+                        </nav>
+                        </div>
+                    <div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="panel panel-default">
+                  <!-- Default panel contents -->
+                  <div class="panel-heading">收入,本周总收入为{{ sum_of_income_this_weekend }}</div>
+                    <div class="panel-body">
+                        <div id="income-container"></div>
+                        {% csrf_token %}
+                    </div>
+                    <script>
+                        // 图表配置
+                        var options = {
+                            chart: {type: 'line' },                         //指定图表的类型，默认是折线图（line）
+                            title: {text: null  },                 // 标题
+                            xAxis: {
+                                categories: {{ dates|safe }},
+                                tickmarkPlacement: 'on',
+                                title: { text: '近七日收入' },
+                            },  // x 轴分类
+                            yAxis: {
+                                title: {text: null },               // y 轴标题
+                                labels: {enabled: false},
+                                gridLineDashStyle: 'Dash',
+                            },
+                            series: [{                              // 数据列
+                                name: '收入',                        // 数据列名
+                                data: {{ incomes_sum }}                     // 数据
+                            }],
+                            plotOptions:{ {# 数据标签 #}
+                                line: {
+                                    dataLabels: {
+                                        enabled: true,
+                                    }
+                                }
+                            },
+                            legend: {enabled: false},
+                            credits: {enabled: false},
+                        };
+                        // 图表初始化函数
+                        var chart = Highcharts.chart('income-container', options);
+                    </script>
+                      <nav aria-label="...">
+                        <ul class="pager">
+                          <li><a href="{% url 'incomelist' contents_user.pk%}">查看</a></li>
+                          <li><a href="{% url 'addincome' contents_user.pk%}">添加</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                    <div class="panel panel-default">
+                      <!-- Default panel contents -->
+                      <div class="panel-heading">债务记录,本周总债务为{{ sum_of_debt_this_weekend }}</div>
+                        <div class="panel-body">
+                            <div id="result-container"></div>
+                            {% csrf_token %}
+                            <script>
+                            // 图表配置
+                            var options = {
+                                chart: {type: 'line' },                         //指定图表的类型，默认是折线图（line）
+                                title: {text: null  },                 // 标题
+                                xAxis: {
+                                    categories: {{ dates|safe }},
+                                    tickmarkPlacement: 'on',
+                                    title: { text: '近七日债务' },
+                                },  // x 轴分类
+                                yAxis: {
+                                    title: {text: null },               // y 轴标题
+                                    labels: {enabled: false},
+                                    gridLineDashStyle: 'Dash',
+                                },
+                                series: [{                              // 数据列
+                                    name: '债务',                        // 数据列名
+                                    data: {{ result }}                     // 数据
+                                }],
+                                plotOptions:{ {# 数据标签 #}
+                                    line: {
+                                        dataLabels: {
+                                            enabled: true,
+                                        }
+                                    }
+                                },
+                                legend: {enabled: false},
+                                credits: {enabled: false},
+                            };
+                            // 图表初始化函数
+                            var chart = Highcharts.chart('result-container', options);
+                        </script>
+                        </div>
+                        </div>
+                    <div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+        <canvas class="background"></canvas>
+
+<script>
+        window.onload = function () {
+            Particles.init({
+                selector: '.background',
+                color: ['#DA0463', '#404B69', '#DBEDF3'],
+                connectParticles: true
+            });
+        };
+    </script>
+
+
+    <script type="text/javascript" src="{% static 'jquery-1.12.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'particles.min.js' %}"></script>
+</body>
+</html>
